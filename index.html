@@ -5,29 +5,28 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Issue 001 – Digital Surveillance</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Source+Code+Pro:wght@400;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
 
 <style>
 body {
   margin: 0;
   background: #000;
-  font-family: "Source Code Pro", monospace;
+  font-family: "VT323", monospace;
   color: #0f0;
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 30px 20px; /* moved image down */
+  padding: 22px;
 }
 
-/* Banner */
+/* BANNER */
 .banner-wrapper {
   position: relative;
   width: 64vw;
-  max-width: 640px;
+  max-width: 670px;
   border-radius: 18px;
   overflow: hidden;
-  box-shadow: 0 0 12px #0f0;
-  margin-top: 40px; /* image lowered */
+  margin-top: 25px;
 }
 .banner-wrapper img {
   width: 100%;
@@ -35,164 +34,217 @@ body {
   transition: filter .25s ease;
 }
 .banner-wrapper.dim img {
-  filter: brightness(0.78);
+  filter: brightness(0.65);
 }
 
-/* Hotspots */
+/* HOTSPOTS */
 .hotspot {
   position: absolute;
   cursor: pointer;
   border-radius: 10px;
-  overflow: hidden;
 }
 
-.info-card {
+/* RADAR */
+.hotspot::after {
+  content: "";
   position: absolute;
-  inset: 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  color: #0f0;
-  font-size: 11px;
-  text-align: center;
-  padding: 4px;
+  left: 50%;
+  top: 50%;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(0,255,0,0.9);
   opacity: 0;
-  transition: opacity .2s ease;
-  line-height: 1.25;
-
-  /* prevent text spilling */
-  overflow-wrap: break-word;
-  word-break: break-word;
-  white-space: normal;
+  animation: none;
 }
-.hotspot:hover .info-card {
+.hotspot:hover::after {
   opacity: 1;
+  animation: radar 1.2s infinite ease-out;
 }
 
-/* ISSUE title */
+@keyframes radar {
+  0% { transform: translate(-50%,-50%) scale(0.6); opacity: .8; }
+  70% { transform: translate(-50%,-50%) scale(2.3); opacity: .2; }
+  100% { transform: translate(-50%,-50%) scale(3.2); opacity: 0; }
+}
+
 .issue-label {
-  margin-top: 22px;
-  font-size: 22px;
+  margin-top: 20px;
+  font-size: 28px;
   animation: flicker 1.4s infinite alternate;
 }
 @keyframes flicker {
-  from { opacity: .55; }
+  from { opacity: .5; }
   to   { opacity: 1; }
 }
 
-/* Articles list — aligned cleanly */
-.articles {
+/* NEW WRAPPER TO CENTER ARTICLE LIST TO IMAGE WIDTH */
+.article-wrapper {
+  width: 64vw;
+  max-width: 670px;
+  margin: 0 auto;
   margin-top: 15px;
-  width: 100%;
-  max-width: 600px;
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 10px 40px;
-  justify-items: start; /* EXACT crisp left alignment */
 }
 
+/* ARTICLE LIST */
+.articles {
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 6px 22px;
+  text-align: left;
+}
 .articles a {
   text-decoration: none;
   color: #0f0;
-  font-size: 15px;
-  transition: .2s;
+  font-size: 18px;
+  transition: text-shadow .2s ease;
 }
 .articles a:hover {
-  color: #00ff99;
-  text-shadow: 0 0 6px #00ff99;
+  text-shadow: 0 0 6px #0f0;
 }
 
-/* Mobile */
-@media (max-width: 700px) {
-  .articles {
-    grid-template-columns: 1fr;
-    gap: 8px;
-    justify-items: center;
-  }
-  .banner-wrapper {
-    width: 92vw;
-  }
+/* TERMINAL */
+.terminal-box {
+  position: absolute;
+  background: #000;
+  border: 1px solid #0f0;
+  padding: 14px;
+  border-radius: 6px;
+  width: 240px;
+  display: none;
+  flex-direction: column;
+  gap: 8px;
+  z-index: 30;
+}
+.terminal-title {
+  font-size: 20px;
+}
+.terminal-abstract {
+  font-size: 15px;
+  line-height: 1.3;
+}
+.read-more {
+  border: 1px solid #0f0;
+  padding: 3px 6px;
+  cursor: pointer;
+  width: fit-content;
+}
+.read-more:hover {
+  background: #0f0;
+  color: #000;
+}
+
+/* MOBILE */
+@media(max-width: 760px) {
+  .banner-wrapper { width: 94vw; }
+  .article-wrapper { width: 94vw; }
+  .articles { grid-template-columns: 1fr; }
 }
 </style>
 </head>
+
 <body>
 
+<!-- BANNER -->
 <div class="banner-wrapper" id="banner">
   <img src="ban.webp" alt="Banner">
 
-  <!-- Hotspots -->
-  <div class="hotspot" data-id="1" style="left:14.1458%; top:12.8857%; width:10.7726%; height:26.3158%;">
-    <div class="info-card"></div>
-  </div>
-
-  <div class="hotspot" data-id="2" style="left:3.1556%; top:34.4828%; width:10.4461%; height:21.2341%;">
-    <div class="info-card"></div>
-  </div>
-
-  <div class="hotspot" data-id="3" style="left:17.8455%; top:52.6316%; width:13.0577%; height:26.8603%;">
-    <div class="info-card"></div>
-  </div>
-
-  <div class="hotspot" data-id="4" style="left:27.2035%; top:26.1343%; width:9.6844%; height:24.5009%;">
-    <div class="info-card"></div>
-  </div>
-
-  <div class="hotspot" data-id="5" style="left:37.432%; top:10.8893%; width:13.3841%; height:27.7677%;">
-    <div class="info-card"></div>
-  </div>
-
-  <div class="hotspot" data-id="6" style="left:55.8215%; top:9.4374%; width:13.6017%; height:26.8603%;">
-    <div class="info-card"></div>
-  </div>
-
-  <div class="hotspot" data-id="7" style="left:80.4135%; top:42.6497%; width:14.6899%; height:32.6679%;">
-    <div class="info-card"></div>
-  </div>
-
-  <div class="hotspot" data-id="8" style="left:38.1937%; top:40.2904%; width:14.4723%; height:31.216%;">
-    <div class="info-card"></div>
-  </div>
-
-  <div class="hotspot" data-id="9" style="left:53.7541%; top:40.8348%; width:11.3166%; height:28.3122%;">
-    <div class="info-card"></div>
-  </div>
-
-  <div class="hotspot" data-id="10" style="left:67.0294%; top:41.5608%; width:11.6431%; height:27.7677%;">
-    <div class="info-card"></div>
-  </div>
+  <!-- ALL 10 HOTSPOTS EXACTLY AS GIVEN -->
+  <div class="hotspot" data-id="1"  style="left:14.1458%; top:12.8857%; width:10.7726%; height:26.3158%;"></div>
+  <div class="hotspot" data-id="2"  style="left:3.1556%;  top:34.4828%; width:10.4461%; height:21.2341%;"></div>
+  <div class="hotspot" data-id="3"  style="left:17.8455%; top:52.6316%; width:13.0577%; height:26.8603%;"></div>
+  <div class="hotspot" data-id="4"  style="left:27.2035%; top:26.1343%; width:9.6844%;  height:24.5009%;"></div>
+  <div class="hotspot" data-id="5"  style="left:37.432%;  top:10.8893%; width:13.3841%; height:27.7677%;"></div>
+  <div class="hotspot" data-id="6"  style="left:55.8215%; top:9.4374%;  width:13.6017%; height:26.8603%;"></div>
+  <div class="hotspot" data-id="7"  style="left:80.4135%; top:42.6497%; width:14.6899%; height:32.6679%;"></div>
+  <div class="hotspot" data-id="8"  style="left:38.1937%; top:40.2904%; width:14.4723%; height:31.216%;"></div>
+  <div class="hotspot" data-id="9"  style="left:53.7541%; top:40.8348%; width:11.3166%; height:28.3122%;"></div>
+  <div class="hotspot" data-id="10" style="left:67.0294%; top:41.5608%; width:11.6431%; height:27.7677%;"></div>
 
 </div>
 
 <div class="issue-label">ISSUE 001</div>
 
-<div class="articles" id="articleList">
-  <a>1. Digital Panopticon</a>
-  <a>2. The Eyes in Your Phone</a>
-  <a>3. Ghost Data Trails</a>
-  <a>4. The New Surveillance State</a>
-  <a>5. Cameras We Can't See</a>
-  <a>6. Algorithmic Watchers</a>
-  <a>7. The Invisible Logs</a>
-  <a>8. AI and the End of Privacy</a>
-  <a>9. Metadata Cartography</a>
-  <a>10. Consent in 2030</a>
+<!-- ARTICLE LIST CENTERED PROPERLY -->
+<div class="article-wrapper">
+  <div class="articles" id="articleList">
+    <a>1. Digital Panopticon</a>
+    <a>2. The Eyes in Your Phone</a>
+    <a>3. Ghost Data Trails</a>
+    <a>4. The New Surveillance State</a>
+    <a>5. Cameras We Can't See</a>
+    <a>6. Algorithmic Watchers</a>
+    <a>7. The Invisible Logs</a>
+    <a>8. AI and the End of Privacy</a>
+    <a>9. Metadata Cartography</a>
+    <a>10. Consent in 2030</a>
+  </div>
+</div>
+
+<!-- TERMINAL BOX -->
+<div class="terminal-box" id="terminal">
+  <div class="terminal-title" id="tTitle"></div>
+  <div class="terminal-abstract" id="tAbs"></div>
+  <div class="read-more">Read More</div>
 </div>
 
 <script>
 const banner = document.getElementById("banner");
+const terminal = document.getElementById("terminal");
+const tTitle = document.getElementById("tTitle");
+const tAbs = document.getElementById("tAbs");
+
+const abstracts = [
+  "How modern systems observe people invisibly.",
+  "Your pocket device leaks more than you think.",
+  "Every click leaves a ghost trail behind.",
+  "Governments reshaping privacy infrastructures.",
+  "Cameras hidden in plain sight everywhere.",
+  "Algorithms watching patterns and anomalies.",
+  "Logs that follow you even after deletion.",
+  "AI reshaping what privacy even means.",
+  "Maps built entirely from metadata traces.",
+  "What ‘consent’ looks like in the future."
+];
+
 const articles = [...document.querySelectorAll(".articles a")];
 
-/* Insert ONLY TITLES (remove author) */
+/* DIM IMAGE ONLY ON HOTSPOT */
 document.querySelectorAll(".hotspot").forEach(h => {
-  const id = Number(h.dataset.id);
-  let title = articles[id - 1].textContent.replace(/^\d+\.\s*/, "");
-  h.querySelector(".info-card").textContent = title;
+  h.addEventListener("mouseenter", () => banner.classList.add("dim"));
+  h.addEventListener("mouseleave", () => banner.classList.remove("dim"));
 });
 
-/* Dim only when hovering hotspots */
-document.querySelectorAll(".hotspot").forEach(hotspot => {
-  hotspot.addEventListener("mouseenter", () => banner.classList.add("dim"));
-  hotspot.addEventListener("mouseleave", () => banner.classList.remove("dim"));
+/* TERMINAL POSITIONING WITH AUTO-FLIP */
+document.querySelectorAll(".hotspot").forEach(h => {
+  h.addEventListener("click", e => {
+    e.stopPropagation();
+
+    const id = Number(h.dataset.id);
+    const rect = h.getBoundingClientRect();
+    const screenW = window.innerWidth;
+    const w = 240; // terminal width
+
+    tTitle.textContent = articles[id - 1].textContent;
+    tAbs.textContent = abstracts[id - 1];
+
+    let x = rect.right + 15;
+
+    if (x + w > screenW) {
+      x = rect.left - w - 15;
+    }
+
+    terminal.style.left = x + "px";
+    terminal.style.top = rect.top + "px";
+    terminal.style.display = "flex";
+  });
+});
+
+/* CLOSE TERMINAL ON OUTSIDE CLICK */
+document.addEventListener("click", e => {
+  if (!terminal.contains(e.target)) terminal.style.display = "none";
 });
 </script>
 
