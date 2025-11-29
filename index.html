@@ -1,178 +1,198 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Matrix Hover Hotspots</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Issue 001 – Digital Surveillance</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Source+Code+Pro:wght@400;700&display=swap" rel="stylesheet">
 
 <style>
-    body {
-        background: #000;
-        margin: 0;
-        padding: 20px;
-        font-family: monospace;
-        display: flex;
-        justify-content: center;
-    }
+body {
+  margin: 0;
+  background: #000;
+  font-family: "Source Code Pro", monospace;
+  color: #0f0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 30px 20px; /* moved image down */
+}
 
-    .wrapper {
-        position: relative;
-        width: 80vw;
-        max-width: 900px;
-    }
+/* Banner */
+.banner-wrapper {
+  position: relative;
+  width: 64vw;
+  max-width: 640px;
+  border-radius: 18px;
+  overflow: hidden;
+  box-shadow: 0 0 12px #0f0;
+  margin-top: 40px; /* image lowered */
+}
+.banner-wrapper img {
+  width: 100%;
+  display: block;
+  transition: filter .25s ease;
+}
+.banner-wrapper.dim img {
+  filter: brightness(0.78);
+}
 
-    .banner {
-        width: 100%;
-        display: block;
-        border-radius: 10px;
-        transition: filter .25s ease;
-    }
+/* Hotspots */
+.hotspot {
+  position: absolute;
+  cursor: pointer;
+  border-radius: 10px;
+  overflow: hidden;
+}
 
-    /* Reduced dimming (previously brightness 0.6) */
-    .wrapper.hovering .banner {
-        filter: brightness(0.85);
-    }
+.info-card {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #0f0;
+  font-size: 11px;
+  text-align: center;
+  padding: 4px;
+  opacity: 0;
+  transition: opacity .2s ease;
+  line-height: 1.25;
 
-    .hotspot {
-        position: absolute;
-        cursor: pointer;
-        overflow: hidden;
-        border-radius: 4px;
-        background: transparent;
-    }
+  /* prevent text spilling */
+  overflow-wrap: break-word;
+  word-break: break-word;
+  white-space: normal;
+}
+.hotspot:hover .info-card {
+  opacity: 1;
+}
 
-    canvas {
-        position: absolute;
-        top: 0; left: 0;
-        width: 100%;
-        height: 100%;
-        opacity: 0;
-        transition: opacity .25s ease-out;
-        mix-blend-mode: screen;
-        pointer-events: none;
-    }
+/* ISSUE title */
+.issue-label {
+  margin-top: 22px;
+  font-size: 22px;
+  animation: flicker 1.4s infinite alternate;
+}
+@keyframes flicker {
+  from { opacity: .55; }
+  to   { opacity: 1; }
+}
 
-    .label {
-        position: absolute;
-        bottom: 5px;
-        left: 5px;
-        right: 5px;
-        color: #0f0;
-        font-size: 12px;
-        font-weight: bold;
-        opacity: 0;
-        text-shadow: 0 0 5px #0f0;
-        transition: opacity .35s ease-out;
-        z-index: 10;
-    }
+/* Articles list — aligned cleanly */
+.articles {
+  margin-top: 15px;
+  width: 100%;
+  max-width: 600px;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px 40px;
+  justify-items: start; /* EXACT crisp left alignment */
+}
 
-    .hotspot:hover canvas { opacity: 0.9; }
-    .hotspot:hover .label { opacity: 1; }
+.articles a {
+  text-decoration: none;
+  color: #0f0;
+  font-size: 15px;
+  transition: .2s;
+}
+.articles a:hover {
+  color: #00ff99;
+  text-shadow: 0 0 6px #00ff99;
+}
+
+/* Mobile */
+@media (max-width: 700px) {
+  .articles {
+    grid-template-columns: 1fr;
+    gap: 8px;
+    justify-items: center;
+  }
+  .banner-wrapper {
+    width: 92vw;
+  }
+}
 </style>
 </head>
 <body>
 
-<div class="wrapper" id="wrapper">
-    <img class="banner" src="the banner2.webp" />
+<div class="banner-wrapper" id="banner">
+  <img src="ban.webp" alt="Banner">
 
-    <!-- Hotspots -->
-    <div class="hotspot" style="left:37.1429%; top:11.1502%; width:15.3571%; height:25%;">
-        <canvas></canvas>
-        <div class="label">“Digital Echoes” — L. Warren</div>
-    </div>
+  <!-- Hotspots -->
+  <div class="hotspot" data-id="1" style="left:14.1458%; top:12.8857%; width:10.7726%; height:26.3158%;">
+    <div class="info-card"></div>
+  </div>
 
-    <div class="hotspot" style="left:55.5%; top:10.9155%; width:14.2143%; height:24.4131%;">
-        <canvas></canvas>
-        <div class="label">“Eyes of the Machine” — A. Noor</div>
-    </div>
+  <div class="hotspot" data-id="2" style="left:3.1556%; top:34.4828%; width:10.4461%; height:21.2341%;">
+    <div class="info-card"></div>
+  </div>
 
-    <div class="hotspot" style="left:13.2857%; top:11.1502%; width:13%; height:30.6338%;">
-        <canvas></canvas>
-        <div class="label">“Signal Ghosts” — R. Han</div>
-    </div>
+  <div class="hotspot" data-id="3" style="left:17.8455%; top:52.6316%; width:13.0577%; height:26.8603%;">
+    <div class="info-card"></div>
+  </div>
 
-    <div class="hotspot" style="left:36.3571%; top:40.2582%; width:14.2143%; height:33.216%;">
-        <canvas></canvas>
-        <div class="label">“Silent Surveillance” — K. Mira</div>
-    </div>
+  <div class="hotspot" data-id="4" style="left:27.2035%; top:26.1343%; width:9.6844%; height:24.5009%;">
+    <div class="info-card"></div>
+  </div>
 
-    <div class="hotspot" style="left:52.8571%; top:40.8451%; width:12.3571%; height:29.5775%;">
-        <canvas></canvas>
-        <div class="label">“Pattern Watchers” — J. Rowe</div>
-    </div>
+  <div class="hotspot" data-id="5" style="left:37.432%; top:10.8893%; width:13.3841%; height:27.7677%;">
+    <div class="info-card"></div>
+  </div>
 
-    <div class="hotspot" style="left:80.2143%; top:42.6056%; width:16.2857%; height:32.7465%;">
-        <canvas></canvas>
-        <div class="label">“The Grid Sees All” — T. Vale</div>
-    </div>
+  <div class="hotspot" data-id="6" style="left:55.8215%; top:9.4374%; width:13.6017%; height:26.8603%;">
+    <div class="info-card"></div>
+  </div>
 
-    <div class="hotspot" style="left:16.2857%; top:51.4085%; width:14.7143%; height:30.9859%;">
-        <canvas></canvas>
-        <div class="label">“Deep Layer Eyes” — M. Zhou</div>
-    </div>
+  <div class="hotspot" data-id="7" style="left:80.4135%; top:42.6497%; width:14.6899%; height:32.6679%;">
+    <div class="info-card"></div>
+  </div>
+
+  <div class="hotspot" data-id="8" style="left:38.1937%; top:40.2904%; width:14.4723%; height:31.216%;">
+    <div class="info-card"></div>
+  </div>
+
+  <div class="hotspot" data-id="9" style="left:53.7541%; top:40.8348%; width:11.3166%; height:28.3122%;">
+    <div class="info-card"></div>
+  </div>
+
+  <div class="hotspot" data-id="10" style="left:67.0294%; top:41.5608%; width:11.6431%; height:27.7677%;">
+    <div class="info-card"></div>
+  </div>
+
+</div>
+
+<div class="issue-label">ISSUE 001</div>
+
+<div class="articles" id="articleList">
+  <a>1. Digital Panopticon</a>
+  <a>2. The Eyes in Your Phone</a>
+  <a>3. Ghost Data Trails</a>
+  <a>4. The New Surveillance State</a>
+  <a>5. Cameras We Can't See</a>
+  <a>6. Algorithmic Watchers</a>
+  <a>7. The Invisible Logs</a>
+  <a>8. AI and the End of Privacy</a>
+  <a>9. Metadata Cartography</a>
+  <a>10. Consent in 2030</a>
 </div>
 
 <script>
-/* Toggle global dimming */
-const wrapper = document.getElementById("wrapper");
+const banner = document.getElementById("banner");
+const articles = [...document.querySelectorAll(".articles a")];
+
+/* Insert ONLY TITLES (remove author) */
 document.querySelectorAll(".hotspot").forEach(h => {
-    h.addEventListener("mouseenter", () => wrapper.classList.add("hovering"));
-    h.addEventListener("mouseleave", () => wrapper.classList.remove("hovering"));
+  const id = Number(h.dataset.id);
+  let title = articles[id - 1].textContent.replace(/^\d+\.\s*/, "");
+  h.querySelector(".info-card").textContent = title;
 });
 
-/* Matrix rain updates */
-document.querySelectorAll(".hotspot canvas").forEach(canvas => {
-    const ctx = canvas.getContext("2d");
-
-    function resize() {
-        canvas.width = canvas.offsetWidth;
-        canvas.height = canvas.offsetHeight;
-    }
-    resize();
-    window.addEventListener("resize", resize);
-
-    /* Fewer characters for a cleaner fit */
-    const chars = "101010101010100101010100101".split("");
-
-    let drops = [];
-
-    function initDrops() {
-        /* Reduced columns so no spill */
-        const cols = Math.floor(canvas.width / 14) - 1;
-        drops = Array(cols).fill(0);
-    }
-
-    function draw() {
-        ctx.fillStyle = "rgba(0,0,0,0.04)";
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-        ctx.fillStyle = "#0f0";
-        ctx.font = "14px monospace";
-
-        /* Reserve bottom 25% for text → stop matrix rain there */
-        const matrixMaxY = canvas.height * 0.75;
-
-        drops.forEach((y, i) => {
-            const text = chars[Math.floor(Math.random() * chars.length)];
-            const x = i * 14;
-            const yPos = y * 16;
-
-            if (yPos < matrixMaxY) {
-                ctx.fillText(text, x, yPos);
-            }
-
-            if (yPos > matrixMaxY || Math.random() > 0.975) {
-                drops[i] = 0;
-            } else {
-                drops[i]++;
-            }
-        });
-
-        requestAnimationFrame(draw);
-    }
-
-    initDrops();
-    draw();
+/* Dim only when hovering hotspots */
+document.querySelectorAll(".hotspot").forEach(hotspot => {
+  hotspot.addEventListener("mouseenter", () => banner.classList.add("dim"));
+  hotspot.addEventListener("mouseleave", () => banner.classList.remove("dim"));
 });
 </script>
 
